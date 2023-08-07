@@ -254,7 +254,7 @@
 			<!-- https://www.spigotmc.org/resources/logblock.67333/history -->
 			<groupId>de.diddiz</groupId>
 			<artifactId>logblock</artifactId>
-			<version>1.16.5.1</version>
+			<version>1.94</version>
 			<scope>provided</scope>
 			<exclusions>
 				<exclusion>

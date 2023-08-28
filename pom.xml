@@ -295,7 +295,7 @@
 			<!-- https://www.spigotmc.org/resources/towny-advanced.72694/history -->
 			<groupId>com.github.TownyAdvanced</groupId>
 			<artifactId>Towny</artifactId>
-			<version>0.98.3.0</version>
+			<version>0.99.5.15</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>

@@ -197,7 +197,7 @@
 			<!-- https://dev.bukkit.org/projects/worldedit/files  -->
 			<groupId>com.sk89q.worldedit</groupId>
 			<artifactId>worldedit-bukkit</artifactId>
-			<version>7.3.0-SNAPSHOT</version>
+			<version>7.3.2</version>
 			<scope>provided</scope>
 			<exclusions>
 				<exclusion>

@@ -166,7 +166,7 @@
 			<!-- https://bstats.org/getting-started/include-metrics -->
 			<groupId>org.bstats</groupId>
 			<artifactId>bstats-bukkit</artifactId>
-			<version>3.0.2</version>
+			<version>3.1.0</version>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>

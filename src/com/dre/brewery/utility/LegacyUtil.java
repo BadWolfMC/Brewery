@@ -79,7 +79,7 @@ public class LegacyUtil {
 
 		if (!unknownWoodTypes.isEmpty()) {
 			P.p.log("New wood types detected. Assigning recipe numbers:");
-			int lastKnownNumber = 12;
+			int lastKnownNumber = 13;
 			for (int i = 0; i < unknownWoodTypes.size(); i++) {
 				P.p.log("  " + unknownWoodTypes.get(i) + ": " + (i + lastKnownNumber));
 			}
@@ -247,7 +247,7 @@ public class LegacyUtil {
 			} else if (!UNKNOWN_WOOD.isEmpty()) {
 				for (int i = 0; i < UNKNOWN_WOOD.size(); i++) {
 					if (material.startsWith(UNKNOWN_WOOD.get(i))) {
-						return (byte) (i + 12);
+						return (byte) (i + 13);
 					}
 				}
 				return 0;

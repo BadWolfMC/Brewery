@@ -65,7 +65,8 @@ public class LegacyUtil {
 					!name.startsWith("WARPED") &&
 					!name.startsWith("MANGROVE") &&
 					!name.startsWith("CHERRY") &&
-					!name.startsWith("BAMBOO")) {
+					!name.startsWith("BAMBOO") &&
+					!name.startsWith("PALE_OAK")) {
 
 					unknownWoodTypes.add(woodName);
 				}
@@ -241,6 +242,8 @@ public class LegacyUtil {
 				return 10;
 			} else if (material.startsWith("BAMBOO")) {
 				return 11;
+			} else if (material.startsWith("PALE_OAK")) {
+				return 12;
 			} else if (!UNKNOWN_WOOD.isEmpty()) {
 				for (int i = 0; i < UNKNOWN_WOOD.size(); i++) {
 					if (material.startsWith(UNKNOWN_WOOD.get(i))) {

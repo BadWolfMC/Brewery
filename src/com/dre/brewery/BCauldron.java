@@ -7,7 +7,13 @@ import com.dre.brewery.recipe.RecipeItem;
 import com.dre.brewery.utility.BUtil;
 import com.dre.brewery.utility.LegacyUtil;
 import com.dre.brewery.utility.Tuple;
-import org.bukkit.*;
+import org.bukkit.Color;
+import org.bukkit.Effect;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.Particle;
+import org.bukkit.Sound;
+import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.BlockData;
@@ -161,76 +167,59 @@ public class BCauldron {
 		return false;
 	}
 
-	// fills players bottle with cooked brew
+	// fills players bottle with cooked brew (Paper-only, BlockData/Levelled)
 	public boolean fill(Player player, Block block) {
 		if (!player.hasPermission("brewery.cauldron.fill")) {
 			P.p.msg(player, P.p.languageReader.get("Perms_NoCauldronFill"));
 			return true;
 		}
+
 		ItemStack potion = ingredients.cook(state);
-		if (potion == null) return false;
-
-		if (P.use1_13) {
-			BlockData data = block.getBlockData();
-			if (!(data instanceof Levelled)) {
-				bcauldrons.remove(block);
-				return false;
-			}
-			Levelled cauldron = ((Levelled) data);
-			if (cauldron.getLevel() <= 0) {
-				bcauldrons.remove(block);
-				return false;
-			}
-
-			// If the Water_Cauldron type exists and the cauldron is on last level
-			if (LegacyUtil.WATER_CAULDRON != null && cauldron.getLevel() == 1) {
-				// Empty Cauldron
-				block.setType(Material.CAULDRON);
-				bcauldrons.remove(block);
-			} else {
-				cauldron.setLevel(cauldron.getLevel() - 1);
-
-				// Update the new Level to the Block
-				// We have to use the BlockData variable "data" here instead of the casted "cauldron"
-				// otherwise < 1.13 crashes on plugin load for not finding the BlockData Class
-				block.setBlockData(data);
-
-				if (cauldron.getLevel() <= 0) {
-					bcauldrons.remove(block);
-				} else {
-					changed = true;
-				}
-			}
-
-		} else {
-			@SuppressWarnings("deprecation")
-			byte data = block.getData();
-			if (data > 3) {
-				data = 3;
-			} else if (data <= 0) {
-				bcauldrons.remove(block);
-				return false;
-			}
-			data -= 1;
-			LegacyUtil.setData(block, data);
-
-			if (data == 0) {
-				bcauldrons.remove(block);
-			} else {
-				changed = true;
-			}
+		if (potion == null) {
+			return false;
 		}
+
+		// Require a water cauldron with a level property
+		if (block.getType() != Material.WATER_CAULDRON) {
+			bcauldrons.remove(block);
+			return false;
+		}
+
+		BlockData data = block.getBlockData();
+		if (!(data instanceof Levelled cauldron)) {
+			bcauldrons.remove(block);
+			return false;
+		}
+
+		// No water left? stop tracking
+		if (cauldron.getLevel() <= cauldron.getMinimumLevel()) {
+			bcauldrons.remove(block);
+			return false;
+		}
+
+		// decrement one level and write it back
+		int newLevel = Math.max(cauldron.getMinimumLevel(), cauldron.getLevel() - 1);
+		cauldron.setLevel(newLevel);
+		// use the original BlockData variable "data" when writing back
+		block.setBlockData(data, true);
+
+		// housekeeping: drop from map if emptied, else mark changed
+		if (cauldron.getLevel() <= cauldron.getMinimumLevel()) {
+			bcauldrons.remove(block);
+		} else {
+			changed = true;
+		}
+
+		// sfx (kept as in your file)
 		if (P.use1_9) {
 			block.getWorld().playSound(block.getLocation(), Sound.ITEM_BOTTLE_FILL, 1f, 1f);
 		}
-		// Bukkit Bug, inventory not updating while in event so this
-		// will delay the give
-		// but could also just use deprecated updateInventory()
+
+		// give the item (kept as in your file)
 		giveItem(player, potion);
-		// player.getInventory().addItem(potion);
-		// player.getInventory().updateInventory();
 		return true;
 	}
+
 
 	// prints the current cooking time to the player
 	public static void printTime(Player player, Block block) {
